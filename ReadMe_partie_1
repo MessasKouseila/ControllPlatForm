@@ -1,0 +1,115 @@
+######################
+ReadMe partie 1
+######################
+
+Sonde1.sh : 
+
+sonde qui permet d'extraie les informations suivante : 
+- Nombre de processus en cour d'execution sur la machine
+- Nombre d'utilisateur connecter sur la machine
+- Temperature du processus ( le module "lm-sensors" est requis pour pouvoir faire cela )
+
+Sonde2.py :
+
+sonde qui permet l'extraction d'information sur le processeur, la mémoire vive, le disque dure (la patition racine '/')
+information extraite via l'utilisation du module psutil de python
+
+information sur le processeur : 
+- Nombre de processeur physique
+- Nombre de processeur logique
+- Utilisation moyenne des cpu
+
+information sur la mémoire vive :
+- Quantite de RAM totale (Go):
+- Quantite de RAM utilise (%): 
+
+information sur le disque dure :
+- Capacite partition racine (Go):
+- Capacite partition racine utilise (%):
+
+
+Sonde3.py : 
+
+sonde qui permet de lancer un script bash pour extraire les informations sur la mémoire SWAP
+le script bahs lancer est sonde3_bis.sh
+
+sonde3_bis.sh : 
+
+extrait des informtions sur la mémoire d'echange SWAP 
+- Mémoire Swap totale ( en Go ) 
+- Mémoire Swap utilise ( en Go ) (information pas utilise) 
+- Mémoire Swap used ( en % )
+- Mémoire Swap disponible ( en Go ) (information pas utilise)
+
+
+file_temp.sh : 
+
+- script bash qui lance toutes les sondes et detourne leurs affichages dans un fichier nomé info_sonde.
+- ensuite à partir de ce fichier il extrait l'information voulu pour la mettre dans le même fichier 'info_sonde' mais en ecrasant le contenu de ce dernier.
+- il extrait uniquement des valeurs, sans le message afficher par les sonde 
+exemple Utilisation moyenne des cpu : 4%
+lui il extrait uniquement la valeur 4.
+
+login_into_server.py : 
+
+- script qui permet de verifier si la machine est déjà présente dans la bdd du serveur central, 
+- si elle est déjà presente, on demande à son administrateur si il veut changer de mail, ou le type d'alerte qu'il veut recevoir
+- si la machine n'est pas présente dans la bdd, on demande a son administrateur de nous donnée son email pour etre alerter sur l'etat de sa machine.
+- une fois le mail donnée par l'administrateur, on vérifie si il existe déjà dans la table admin, si il existe, on lui propose de changer son email ou le type d'alerte qu'il veut recevoir sur ces machine.
+- une fois son mail connu, les types d'alerte a recevoir connu, on ajoute le script collector.py au crontab de la machine afin qu'elle envoie toutes les 5 minutes des informations au serveur centrale.
+- les machine son identifier via leur adresse mac (adresse physique).
+
+collector.py : 
+
+script qui permet d'envoyer les informations contenu dans le fichier info_sonde vers le serveur central, pour y être inserer dans la bdd
+- le script file_temp.sh est lancer via Subprocess afin d'avoir les informations dans un fichier nomé info_sonde
+- on extrait les informations depuis ce fichier, puis on les met dans un dictionnaire, et on les envoie vers le serveur central
+
+voilà les informations envoyer par le script collector au serveur central : 
+
+- mac_address : adresse physique de la machine, c est avec ça que les machines sont identifié 
+- date_insert : date à laquelle les informations ont été extraites
+- avg_cpu : utilisation moyenne du cpu en %
+- tmp_cpu : temperature du cpu en degrée celsius
+- ram_total : mémoire vive total disponible sur la machine en Go
+- ram_used : mémoire vive utiliser en %
+- swap_total : mémoire d'echange total disponible sur la machine en Go
+- swap_used : mémoire SWAP utiliser en %
+- nb_process : nombre de processus en cour d'execution sur la machine
+- user_connect : nombre d'utilisateur connecter sur la machine
+- check_const : etat de la machine par rapport au pont critique
+- id_admin : identifiant de l'administrateur de la machine
+- physical_core : nombre de coeur physique sur la machine
+- logical_core : nombre de coeur logique sur la machine
+- disk_total : espace disque total disponible sur la machine en Go ( partition '/' uniquement )
+- disk_usage : espace disque utiliser en % 				
+
+plus d'informations concerant check_const
+- quand les infrmations sont extraite, on vérifie sur les valeurs critiques si des points critique sont atteints
+- si une informations critique atteint une certaine valeu, alors un point critque est atteind 
+il y a 5 point critique : 
+- debordement cpu : si avg_cpu (utilisation moyenne du cpu en % ) dépasse les 95%
+- chauffe du cpu : si tmp_cpu depasse les 80 degrée
+- debordement ram : si la mémoire vive est utiliser à plus de 95%
+- debordement swap : si la mémoire d'echange est utiliser à plus de 80%
+- saturation du disque : si la partition '/' est utiliser à plus de 95%
+
+à chaque informtion critique, si la valeur critique est atteinte on rajoute un 1 sinon un 0
+exemple: 
+check_const = 01001
+0 pas de debordement cpu
+1 chauffe du cpu
+0 pas de debordement ram
+0 pas de debordement swap
+1 saturation de la partition '/'
+
+
+configuration :
+
+fichier contenant l'adresse du serveur central
+
+crontab_client :
+fichier crontab utiliser pour automatiser l'envoie des informations vers le serveur central
+
+id_admin:
+fichier contenant l'identifiant de l'administrateur de la machine, il est generer automatiquement quand l'administrateur enregistre la machine pour la premier fois, le serveur lui renvoie son id et cette id est enegistrer dans le fichier id_admin

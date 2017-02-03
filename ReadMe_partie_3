@@ -1,0 +1,30 @@
+######################
+ReadMe partie 3
+######################
+
+
+
+mail_alerte.py : 
+
+script qui permet de notifier chaque administrateur sur l'état des machine qu'il administre
+le script demande au serveur central de lui envoyer l'état de tous les serveurs, le serveur envoie une liste de dictionnaire, avec 3 clé 
+etat de la machine, type d'alerte demander par l'administrateur de cette machine, mail de l'administrateur de la machine, chaque dictionnaire represente une machine.
+exemple : 
+{'etat_server' : 00000, 'const_admin' : 01111, 'mail_admin' : 'mail@mail.fr' }
+
+etat_server : 00000
+ce qui indique qu'aucun point critique n'est atteint sur la machine
+const_admin : 01111
+ce qui indique que l'admin veut etre alerte de tout les points critique, sauf celui du debordement (saturation) cpu
+mail_admin : mail@mail.fr
+mail de l'administrateur de la machine
+
+
+on parcoure la liste de ces dictionnaire et pour chaque machine (dictionnaire), on vérifie si un point critique est atteint ou pas, si il est atteind on regarde si l'admin de cette machine veut être notifier de ce type de point critique, si il l'est alors un mail est envoyer a son adresse mail
+
+
+Visualisation.py : 
+
+script qui permet de voir l'état de toutes machines gerer par la platforme de controle, il affiche les dernieres informations sur chaque machine, et peremet de generer un graph lu grace à un  navigateur
+
+le graph est generer avec le module pygal de python, il genere une image en svg, puis firefox est lancer pour afficher l'image qu represente un historique des 5 derniere informations connu sur la machine

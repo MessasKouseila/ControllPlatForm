@@ -1,0 +1,71 @@
+######################
+ReadMe partie 2
+######################
+
+
+
+
+moteur_stockage.py : 
+
+script permetant de crée 2 base de données, une base de données principale nomé "Moteur_stockage.db",
+et une autre qui servira de bdd de restauration nomé "Moteur_stockage_backups.db"
+la base données a la structure suivante : 
+
+- table admin
+
+- id_admin INTEGER PRIMARY KEY, identifiant de l'administrateur
+- mail VARCHAR(255), email de l'administrateur
+- contrainte VARCHAR(8) type d'alerte que l'administrateur va recevoir, configurer dans lors du lancement du script login_into_server dans la partie1.
+	exemple :
+	contrainte = 01011
+	0: ne veut pas être alerter du debordement cpu 
+	1: veut être alerter de la chauffe du cpu
+	0: ne veut pas être alerter du debordement ram
+	1: veut être alerter du debordement swap
+	1: veut être alerter du debordement disk
+
+
+- table alerte
+
+id_alerte INTEGER, identifiant de l'alerte
+ref_alerte VARCHAR(255) PRIMARY KEY, reference de l'alerte recupere depuis le site du cert
+title_alerte VARCHAR(255), titre de l'alerte
+date_alerte DATE, date de parution de l'alerte
+url_alerte TEXT url permettant de consulter plus en details les informtions sur une alerte
+
+- table sonde
+
+id_sonde INTEGER PRIMARY KEY, identifiant d'une insertion, une insertion correspond à une ligne d'informations sur une machine
+mac_address VARCHAR(255),
+date_insert DATE,
+avg_cpu REAL,
+tmp_cpu REAL,
+ram_total REAL,
+ram_used REAL,
+swap_total REAL,
+swap_used REAL,
+nb_process REAL,
+user_connect REAL,
+check_const VARCHAR(10),
+id_admin INTEGER,
+disk_total REAL,
+disk_usage REAL,
+physical_core INTEGER,
+logical_core INTEGER
+
+une fois la bdd principale crée, un script bash nomé "save.sh" est lancer pour copier la bdd principale vers le repertoir /backups et le nom est changer en "Moteur_stockage_backups.db", c est comme ça que la bdd de restauration est crée, et à chaque insertion dans la bdd principale on insert aussi dans la bdd de restauration, mais on ne supprime jamais de la bdd de restauration
+
+
+clean_bdd.py :
+
+script qui permet de supprimer les données qui sont presente dans la bdd depuis un certains nombre de jours.
+le nombre de jours est configurable via l'interface web, il est stocke dans un fichier nomé "temps" dans le repertoire "partie4"
+le script lit le fichier pour connaitre le nombre de jours max qu'une info peut rester dans la bdd, tout le reste est supprimer
+
+check_alerte.py : 
+
+script qui permet de recupere les 5 dernières alerte de type 'AVI' qui informe sur Des failles de sécurités
+on utilise feedparser pour recupere les 25 dernieres notifications du cert presentes sur le rss suivant "http://www.cert.ssi.gouv.fr/site/cert-fr.rss", puis on vérifie en commençant par les plus récentes si la notification et de type 'AVI', on utilise BeautifulSoup sur l'url de cette notification pour recuperer plus d'informations sur elle.
+une fois 5 notifications recuperer, on stop le script
+
+à chaque fois qu'une alerte est trouver, on l'envoie au serveur central pour y etre inserer, si elle existe déjà elle n'est pas inserer, si elle n'existe pas dans la bdd alors on l'insert et en envoie un mail à tous les administrateurs pour les notifier de cette nouvelle alerte. 

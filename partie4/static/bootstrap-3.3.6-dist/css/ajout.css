@@ -1,0 +1,42 @@
+body
+{
+    padding-top:10px;
+    margin:0;
+}
+ 
+html,body
+{
+    height:100%;
+}
+.navbar-fixed-top
+{
+    background-color: #F8F8F8;
+    border-color: #E7E7E7;
+}
+.nav > li > a:hover{
+    background-color:#00ff83;
+}
+.container-fluid
+{
+    min-height: 100%;
+    position: relative;
+}
+ 
+.container-page
+{
+	min-height: 100%;
+	padding-bottom:100px;
+}
+ 
+.footer
+{   
+    padding: 10px;
+    position: absolute;
+    height:40px;
+    bottom: 0;
+    left: 0;
+    width:100%;
+    text-align: center;
+    clear: both;
+}
+footer{ border:2px solid #d9534f; background-color:#00d27f;}

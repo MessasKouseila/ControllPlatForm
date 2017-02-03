@@ -1,0 +1,44 @@
+
+								#############################
+								#						    #																  
+								#	PROJET REALISER PAR :   #
+								#							#										  
+								#	MESSAS KOUSEILA			#																	  
+								#	MEGHARI AGHILES			#																	  
+								#							#																	  
+								#############################
+
+
+pour mettre en place la platform de controle : 
+
+cote machine :
+- il faut copier la partie 1 sur toutes les machines qu'on veut monitorer, lancer le script login_into_serer.py
+ce dernier va ajouter au crontab le script qui cllecte les informations de la machine et les envoie au serveur central
+
+cote serveur :
+- lancer le scripte moteur_stockage.py dans le partie2 pour crée la bdd
+puis : 
+- Editer le fichier de configuration nomé "Configuration", 
+le fichier contient les informations suivantes :
+
+ligne 1 : adresse du serveur (127.0.0.1 par default)
+ligne 2 : port a mettre sur ecoute (5000 par default)
+ligne 3 : Mot de passe de la boite mail UAPV afin de l'utiliser pour envoyer des mail 
+ligne 4 : adresse mail UAPV (nom.prenom@alumni.univ-avignon.fr)
+ligne 5 : adresse mail du compte super utilisateur (admin@admin.fr par default) 
+
+une fois editer on peut lancer le scritp launch_server.py
+se dernier va ajouter les scripts suivants au crontab :
+-clean_bdd
+-check_alerte
+-alerte_mail
+
+pour se connecter au web service :
+
+sur un navigateur tapper : 
+http://adresse_du_serveur:port_sur_ecoute/ ( par default : http://127.0.0.1:5000/accueil)
+cela va vous conduite sur la page de connxion
+logger vous avec votre email si vous avez des machine monitorer, sinon avec l'adresse mail du super admin
+le mail du super admin ne reçoit pas de mail ni pour les alertes, ni pour les points critiques des machines
+
+

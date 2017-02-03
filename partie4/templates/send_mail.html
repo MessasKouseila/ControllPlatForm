@@ -1,0 +1,80 @@
+<html>
+ 	<head>
+		<meta charset="utf-8"/>
+	    <title>info</title>
+	    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap-3.3.6-dist/css/bootstrap.css') }}"/>
+	    <link href="{{ url_for('static', filename='bootstrap-3.3.6-dist/css/ajout.css') }}" rel="stylesheet"/>
+	</head>
+	<body>
+	<div class="container-fluid">
+		<!-- menu de navigation -->
+		<br>
+		<br>
+		<nav id="header" class="navbar navbar-fixed-top">
+		<div id="header-container" class="container navbar-container">
+			<div id="navbar" class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li class="accueil"><a href="{{ url_for('accueil') }}">Accueil</a></li>
+					<li><a href="{{ url_for('alerte') }}">Alerte</a></li>
+					<li><a href="{{ url_for('machine') }}">Machine</a></li>
+					{% if sess['email']  == admin['email'] %}
+					  <li><a href="{{ url_for('gestion_bdd') }}">Gestion_BDD</a></li>
+					  <li><a href="{{ url_for('gestion_admin') }}">Gestion_ADMIN</a></li>
+					{% endif %}  
+					  <li><a href="{{ url_for('send_mail_to') }}">Send_MAIL</a></li>
+					  {% if sess|length  > 0%}
+					    <li><a href="{{ url_for('logout') }}">DECONNEXION</a></li>
+					  {% else %}
+					    <li><a href="{{ url_for('accueil') }}">CONNEXION</a></li>
+					{% endif %}
+				</ul>
+			</div>
+		</div>
+		</nav>
+    	<!-- Fin du menu -->
+		<div class="row text-center">
+		<div class=class="col-xs-8 col-xs-offset-2">
+			<form method="post" action="{{ url_for('send_mail_to') }}">
+			 	<fieldset>
+			 		<div class="row">
+		    			<div class="col-xs-4 col-xs-offset-4" style="margin-top:20px;text-align:center"><h3 class="bg-primary"><legend>Envoyer un mail</legend></h3></div>
+		    		</div>
+					<div class="form-group">
+						<label for="email">Envoyer à : </label>
+						<div class="row">
+							<div class="col-xs-6 col-xs-offset-3">
+								<input type="email" class="form-control" name="email" placeholder="destinataire@mail.com">
+							</div>
+						</div>	
+					</div>
+					<div class="form-group">
+						<label for="Subject">Sujet : </label>
+						<div class="row">
+							<div class="col-xs-4 col-xs-offset-4">
+								<input type="text" class="form-control" name="Subject" placeholder="Sujet du mail">
+							</div>
+						</div>		
+					</div>
+					<div class="form-group">
+						<label for="message">Message:</label>
+						<div class="row">
+							<div class="col-xs-8 col-xs-offset-2">
+								<textarea class="form-control" rows="5" name="message"></textarea>
+							</div>
+						</div>		
+					</div>
+					<button type="submit" class="btn btn-danger">Envoyer</button>
+				</fieldset>
+			</form>
+		</div>
+		</div>
+		<!-- Footer-->
+		<div class="row text-center">
+			<footer class="footer">
+			  <p>Projet 2015/2016 administration des systemes d'exploitations</p>
+			</footer>  
+		</div>
+		<!-- Footer-->
+	</div>	
+	</body>
+</html>

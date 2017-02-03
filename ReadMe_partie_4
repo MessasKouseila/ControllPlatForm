@@ -1,0 +1,133 @@
+######################
+ReadMe partie 4
+######################
+
+launch_server.py
+
+script qui permet de lancer un serveur sur une adresse et de le mettre sur ecoute sur un port, l'adresse et le port sont configurable via le fichier "Configuration"
+
+le serveur permet l'acces à la base de données principale, et met en place un service web
+lors du lancement du script, on recupere le crontab actuel dans un fichier nomé "contab_control" et o y ajoute les scripts suivant
+- crontab_control : qui permet d'automatiser les taches suivante : 
+	- veification des alertes du cert
+	- verification des machine par rapport aux points critiques
+	- nettoyage de la bdd
+ 
+
+########## PARTIE WEB ##########
+
+def connexion(): 
+- fonction qui permet de se connecter au service web via son adresse mail, seul les administrateurs present dans la table admin peuvent se logger, ainsi que le super administrateur, le compte super administrateur n'est pas présent dans la table admin, il peut acceder à toutes les option du service web, son email est dans le fichier nomé "Configuration" 
+
+def logout(): 
+- permet de se deconnecter et de supprimer la session actuel
+
+def accueil(): 
+- fonction qui permet le renvoie de la page d'accueil du web service
+
+def alerte():
+- foncton qui renvoie un template (page html) contenant les 5 dernieres alertes du cert
+
+def machine():
+- fonction qui renvoie un template contenant les machines monitorer par la platforme
+- le super admin voit toutes les machines, les autres ne voie que leurs machines
+
+def send_mail_to():
+- fonction qui permet l'envoie de mail a n'importe qui depuis le service web, utile pour le super admin afin de contacter les administrateurs si une de leurs machines presentes des anomalie non definie dans les points critiques
+
+def machine_info(mac_address = None):
+- fontione permettant de renvoyer un template avec des informations detailler sur la machine 
+avec l'adresse mac = mac_adresse donner en parametre.
+- on affiche un tableau contenant les dernieres informations sur la machine
+- on affiche un tableau qui montre si il y a des points critiques atteint par la machine
+- on afficher un graphe avec pygal qui represente un historique des 5 dernieres informations sur la machine 
+
+def gestion_admin():
+- fonction qui renvoie un template pour le super admin uniquement pour voir tous les admins de la platforme de controle
+
+def gestion_bdd():
+- fonction qui renvoie la page de configuration de la bdd seulement si c est le super admin qui la demande
+- 2 fonctionnalité sont disponible sur cette page,
+	- modifier la date limite de suppression des données de la table sonde et alerte
+	- restaurer la base de données
+
+def config_clean():
+- fonction qui permet de configurer la base de donnees, via les informations saisie depuis la page gestion_bdd
+- le nombre de jour qu'une infos reste dans la bdd
+- restaurer la bdd complete, c est à dire copier la bdd_backup et ecraser avec la bdd principale
+pour information à chaque insertion dans la bdd principale, une insertion et ausi faites dans la bdd_backup, mais quand on fait une suppression de la bdd principale, elle n'est pas faite sur la bdd backup
+
+def restore(): 
+- fonction qui permet de restaurer la bdd completement, on ecrasant la bdd principale avec la bdd backup
+
+########## PARTIE communication ##########
+
+def connexion_server():
+- fonction qui permet de verifier si le serveur est en ligne ou pas
+
+def clean_bdd():
+- fonction qui permet de supprimer les donnees veillent d'une certaine duree
+
+def all_server():
+- fonction qui renvoie tous les serveurs monitorer, sous forme json parce que l'information est trop volumineuse pour passer en text
+
+def display_five_last():
+- fonction qui renvoie les 5 dernieres infos (5 dernieres insertions )concernant un serveur passe par post
+
+def display_last():
+- fonction qui renvoie un dictionaire contenant les infos de la derniere insertion d'un serveur passe en post
+
+def check_server():
+- fonction qui renvoie l'etat des machines monitorer par la platforme de controle
+- renvoie une liste de dictionnaire
+- chaque dictionnaire represente une machine, les infos suivante sont données:
+	- etat de la machine
+	- type d'alerte demander par l'administrateur de cette machine
+	- mail de l'administrateur de la machine
+
+def insert_alerte():
+- fonction qui insert les alerte cert recupere depuis le flux rss et passe en post
+- si l'alerte existe deja, il ne l'insert pas de nouveaux
+- envoie un mail a tous les admins si une nouvelle alerte est inserer
+
+def insertion():
+- fonction qui insert les informations recu des sondes
+- chaque serveur monitorer envoie ses infos au serveur central qui les differencie avec leur address mac
+
+def existe():
+- fontion appelé pour savoir si la machine ayant l'address mac mac_address est dans la bdd ou pas, l'adresse mac est envoye via post par la machine monitorer
+
+def insert_admin():
+- fonction qui permet d'inserer un nouvel admin dans la bdd
+
+def retreive_mail():
+- fonction qui permet de renvoye le mail de l'admin en fonction de l'id envoyer via post
+
+def update_mail():
+- fonction qui permet de mettre a jour le mail d'un admin
+
+def retreive_id_admin():
+- fonction permettant de recupere l'id de l'administrateur via son mail envoyer par post
+
+def retreive_contrainte():
+- fonction qui permet de renvoyer le type d'alertes choisie par un admin, via son id envoyer par post
+
+def update_contrainte():
+- fonction qui permet de mettre a jour le type d'alerte choisie par un administrateur
+
+
+clean.sh :
+
+peremet se supprimer tout les fichier de type svg se trouvant dans le dossier static, utiliser avant chaque generation d'une imamge svg n'avoir que la dernier image generer
+
+cron.sh :
+
+permet de recupere le crontab actuel, piur ne pas perdre les taches déjà automatiser 
+
+Configuration : 
+fichier contenant les informations suivante : 
+ligne 1 : adresse du serveur
+ligne 2 : port a mettre sur ecoute
+ligne 3 : Mot de passe de la boite mail UAPV afin de l'utiliser pour envoyer des mail
+ligne 4 : adresse mail UAPV
+ligne 5 : adresse mail du compte super utilisateur 
