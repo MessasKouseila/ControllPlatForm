@@ -7,6 +7,12 @@ import signal
 import sys
 import time
 
+f1 = "clean.sh"
+proc = subprocess.Popen(['bash', f1])
+# on tue le processus au bout d'une seconde 
+time.sleep(1)
+proc.kill()	
+
 # on sauvegarde le chemun absolu pour acceder a la base de donnees
 directory_bdd = os.getcwd()
 directory_bdd = directory_bdd + "/Moteur_stockage.db"
@@ -27,6 +33,7 @@ file_config = file_address + "/bdd_directory"
 fichier = open(file_config, 'w')
 fichier.write(directory_bdd + ':' + directory_bdd_backup + ':')
 fichier.close()
+
 
 try:
 	bdd = sqlite3.connect(directory_bdd)
