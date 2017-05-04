@@ -1,3 +1,4 @@
-*/2 * * * * cd /mnt/06A68C79A68C6B4F/etudes/Semestre_6/Admin_sys/Projet/partie2 && python /mnt/06A68C79A68C6B4F/etudes/Semestre_6/Admin_sys/Projet/partie2/check_alerte.py
-*/2 * * * * cd /mnt/06A68C79A68C6B4F/etudes/Semestre_6/Admin_sys/Projet/partie2 && python /mnt/06A68C79A68C6B4F/etudes/Semestre_6/Admin_sys/Projet/partie2/clean_bdd.py
-*/2 * * * * cd /mnt/06A68C79A68C6B4F/etudes/Semestre_6/Admin_sys/Projet/partie3 && python /mnt/06A68C79A68C6B4F/etudes/Semestre_6/Admin_sys/Projet/partie3/mail_alerte.py
+*/1 * * * * cd /home/kouceila/PycharmProjects/ControllPlatForm/partie1 && python /home/kouceila/PycharmProjects/ControllPlatForm/partie1/collector.py
+*/2 * * * * cd /home/kouceila/PycharmProjects/ControllPlatForm/partie2 && python /home/kouceila/PycharmProjects/ControllPlatForm/partie2/check_alerte.py
+*/2 * * * * cd /home/kouceila/PycharmProjects/ControllPlatForm/partie2 && python /home/kouceila/PycharmProjects/ControllPlatForm/partie2/clean_bdd.py
+*/2 * * * * cd /home/kouceila/PycharmProjects/ControllPlatForm/partie3 && python /home/kouceila/PycharmProjects/ControllPlatForm/partie3/mail_alerte.py

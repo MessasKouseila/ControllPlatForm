@@ -75,8 +75,9 @@ fichier = open(crontab_file_control, 'a')
 fichier.write(cmd_2 + '\n' + cmd_3 + '\n' + cmd_4 + '\n')
 fichier.close()
 
-# proc = subprocess.Popen(['crontab', "crontab_control"])
-proc = subprocess.Popen(['crontab', "f"])
+proc = subprocess.Popen(['crontab', "crontab_control"])
+# permet de remetre le crontab a zero
+# proc = subprocess.Popen(['crontab', "f"])
 
 # on tue le processus au bout d'une seconde 
 time.sleep(1)

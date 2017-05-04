@@ -9,6 +9,6 @@ p2=`who -q | wc -l`
 echo "Nombre de users connecte : $p2"
 
 #temperature du cpu
-temperatur=`sensors | grep Physical | awk '{print $4}' | cut -d '.' -f1`
+temperatur=`sensors |egrep "Core 0:" | awk '{print $3}' | cut -d '.' -f1`
 
 echo "Temperature du cpu (°C) : ${temperatur:1}"
